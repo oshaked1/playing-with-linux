@@ -1,0 +1,10 @@
+.vscode/
+
+*.cmd
+*.o
+*.ko
+
+exec_monitor.mod
+exec_monitor.mod.c
+Module.symvers
+modules.order
