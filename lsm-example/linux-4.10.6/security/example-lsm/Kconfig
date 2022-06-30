@@ -1,0 +1,7 @@
+config SECURITY_EXAMPLELSM
+	bool "Example LSM"
+	depends on SECURITY
+	default n
+	help
+	  This selects Example LSM, which prints a message to dmsg every time a directory is created.
+	  Additionally, if a directory named "forbidden" is created, the action is blocked.
