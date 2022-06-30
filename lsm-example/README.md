@@ -12,7 +12,7 @@ As LSMs cannot be in the form of a kernel module, direct modification of the ker
 
 To compile and run a minimal kernel, follow [this](https://www.zachpfeffer.com/single-post/build-the-linux-kernel-and-busybox-and-run-on-qemu) excellent guide.
 
-To use the example LSM, add the source files in provided here to the kernel source using the same directory structure as they are organized here (replace files which already exist).
+To use the LSM, add the source files provided here to the kernel source using the same directory structure as they are organized here (replace files which already exist).
 
 :warning: This LSM was written for Linux 4.10.6. Replacing the source files of a different kernel version with the files provided here will likely break stuff.
 
@@ -31,7 +31,7 @@ Security options  --->
 	[*] Example LSM
 ```
 
-Once they are activated, compile the kernel normally and run it with QEMU.
+Once they are activated, run `make mrproper` and then compile the kernel normally and run it with QEMU.
 
 The LSM is activated when the kernel initializes, and will work immediately after boot.
 
@@ -45,4 +45,4 @@ Example LSM: blocked attempt to create directory "forbidden" under /root/test
 mkdir: can't create directory '/root/test/forbidden': Permission denied
 ```
 
-The messages printed by the LSM go to dmsg, but the example above was made in a console connection so all kernel messages are displayed.
+The messages printed by the LSM go to dmsg, but the example above was made in a console session so all kernel messages are displayed.
