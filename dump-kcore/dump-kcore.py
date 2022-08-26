@@ -98,7 +98,7 @@ def parse_kcore_segments() -> List[Segment]:
             p_type = int.from_bytes(phent_raw[P_TYPE: P_TYPE+4], byteorder=byteorder)
 
             # make sure it is a LOAD segment
-            if not p_type == PT_LOAD:
+            if p_type != PT_LOAD:
                 continue
             
             # get offset, paddr and size
