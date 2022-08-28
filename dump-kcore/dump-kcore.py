@@ -1,5 +1,8 @@
+#! /usr/bin/python3
+
 from typing import List, Tuple
 
+import os
 import sys
 from dataclasses import dataclass
 
@@ -131,8 +134,8 @@ def dump_kcore(outfile: str):
                 for segment in segments:
                     # memory region is contained in segment
                     if segment.paddr <= mem_range[0] <= segment.paddr + segment.size:
-                        # seek to offset of this physical memory region in the kcore file
-                        ifh.seek(segment.offset + mem_range[0] - segment.paddr)
+                        # calculate offset of this physical memory region in the kcore file
+                        offset = segment.offset + mem_range[0] - segment.paddr
 
                         # calculate end address
                         end = min(mem_range[1], segment.paddr + segment.size)
@@ -144,8 +147,8 @@ def dump_kcore(outfile: str):
                         # write a LiME header of this region to the output file
                         ofh.write(generate_lime_header(mem_range[0], end - 1))
 
-                        # write the memory range from the kcore file to the output file
-                        ofh.write(ifh.read(end - mem_range[0]))
+                        # copy the memory range from the kcore file to the output file
+                        os.copy_file_range(src=ifh.fileno(), dst=ofh.fileno(), count=(end - mem_range[0]), offset_src=offset)
                         
                         # continue to next physical memory range
                         break
