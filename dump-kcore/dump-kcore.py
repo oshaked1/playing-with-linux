@@ -120,6 +120,17 @@ def generate_lime_header(start: int, end: int) -> bytes:
             start.to_bytes(8, byteorder='little') + end.to_bytes(8, byteorder='little') + b'\x00'*8)
 
 
+def copy_file_range(src: int,  dst: int, count: int, offset_src: int):
+    while count > 0:
+        bytes_copied = os.copy_file_range(src, dst, count, offset_src)
+
+        if bytes_copied <= 0:
+            raise RuntimeError("File range could not be copied entirely")
+
+        count -= bytes_copied
+        offset_src += bytes_copied
+
+
 def dump_kcore(outfile: str):
     # get virtual address ranges of identity-mapped physical memory
     phys_mem_ranges = parse_iomem_regions()
@@ -148,7 +159,7 @@ def dump_kcore(outfile: str):
                         ofh.write(generate_lime_header(mem_range[0], end - 1))
 
                         # copy the memory range from the kcore file to the output file
-                        os.copy_file_range(src=ifh.fileno(), dst=ofh.fileno(), count=(end - mem_range[0]), offset_src=offset)
+                        copy_file_range(src=ifh.fileno(), dst=ofh.fileno(), count=(end - mem_range[0]), offset_src=offset)
                         
                         # continue to next physical memory range
                         break
